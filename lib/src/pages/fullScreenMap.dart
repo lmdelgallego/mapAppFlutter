@@ -9,12 +9,13 @@ class FullScreenMap extends StatefulWidget {
 class _FullScreenMapState extends State<FullScreenMap> {
   MapboxMapController mapController;
   final center = LatLng(4.7051101, -74.0598821);
-  String selectedStyle =
-      'mapbox://styles/alucardluis/ckll2a8yi2gf617p8otkjzl4z';
   final String styleMapDark =
       'mapbox://styles/alucardluis/ckll2a8yi2gf617p8otkjzl4z';
   final String styleMapNormal =
       'mapbox://styles/alucardluis/ckll2cl5p2ghb17p8cw1s1p9z';
+  String selectedStyle =
+      'mapbox://styles/alucardluis/ckll2cl5p2ghb17p8cw1s1p9z';
+
   void _onMapCreated(MapboxMapController controller) {
     mapController = controller;
   }
@@ -23,23 +24,41 @@ class _FullScreenMapState extends State<FullScreenMap> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: crearMapa(),
-      floatingActionButton: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          FloatingActionButton(
-            child: Icon(Icons.add_to_home_screen),
-            onPressed: () {
-              if (selectedStyle == styleMapDark) {
-                selectedStyle = styleMapNormal;
-              } else {
-                selectedStyle = styleMapDark;
-              }
+      floatingActionButton: botonesFLotantes(),
+    );
+  }
 
-              setState(() {});
-            },
-          )
-        ],
-      ),
+  Column botonesFLotantes() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        FloatingActionButton(
+          onPressed: () {
+            mapController.animateCamera(CameraUpdate.zoomIn());
+          },
+          child: Icon(Icons.zoom_in),
+        ),
+        SizedBox(height: 8),
+        FloatingActionButton(
+          onPressed: () {
+            mapController.animateCamera(CameraUpdate.zoomOut());
+          },
+          child: Icon(Icons.zoom_out),
+        ),
+        SizedBox(height: 8),
+        FloatingActionButton(
+          child: Icon(Icons.add_to_home_screen),
+          onPressed: () {
+            if (selectedStyle == styleMapDark) {
+              selectedStyle = styleMapNormal;
+            } else {
+              selectedStyle = styleMapDark;
+            }
+
+            setState(() {});
+          },
+        )
+      ],
     );
   }
 
