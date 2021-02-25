@@ -34,6 +34,28 @@ class _FullScreenMapState extends State<FullScreenMap> {
       children: [
         FloatingActionButton(
           onPressed: () {
+            mapController.animateCamera(CameraUpdate.newLatLng(center));
+          },
+          child: Icon(Icons.gps_fixed_sharp),
+        ),
+        SizedBox(height: 8),
+        FloatingActionButton(
+          onPressed: () {
+            mapController.addSymbol(
+              SymbolOptions(
+                geometry: center,
+                iconSize: 2,
+                iconImage: 'rocket-15',
+                textField: 'Mi Casa',
+                textOffset: Offset(0, 2),
+              ),
+            );
+          },
+          child: Icon(Icons.pin_drop_outlined),
+        ),
+        SizedBox(height: 8),
+        FloatingActionButton(
+          onPressed: () {
             mapController.animateCamera(CameraUpdate.zoomIn());
           },
           child: Icon(Icons.zoom_in),
