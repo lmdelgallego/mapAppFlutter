@@ -8,7 +8,13 @@ class FullScreenMap extends StatefulWidget {
 
 class _FullScreenMapState extends State<FullScreenMap> {
   MapboxMapController mapController;
-
+  final center = LatLng(4.7051101, -74.0598821);
+  String selectedStyle =
+      'mapbox://styles/alucardluis/ckll2a8yi2gf617p8otkjzl4z';
+  final String styleMapDark =
+      'mapbox://styles/alucardluis/ckll2a8yi2gf617p8otkjzl4z';
+  final String styleMapNormal =
+      'mapbox://styles/alucardluis/ckll2cl5p2ghb17p8cw1s1p9z';
   void _onMapCreated(MapboxMapController controller) {
     mapController = controller;
   }
@@ -16,16 +22,38 @@ class _FullScreenMapState extends State<FullScreenMap> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: MapboxMap(
-        accessToken:
-            'pk.eyJ1IjoiYWx1Y2FyZGx1aXMiLCJhIjoiY2tsa3VvODVpMDUzYzJubno0aHJncTE1byJ9.-uiruJNS4eYIeX1Mv-XTUw',
-        onMapCreated: _onMapCreated,
-        initialCameraPosition: CameraPosition(
-          target: LatLng(4.7051101, -74.0598821),
-          zoom: 18,
-        ),
-        onStyleLoadedCallback: onStyleLoadedCallback,
+      body: crearMapa(),
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          FloatingActionButton(
+            child: Icon(Icons.add_to_home_screen),
+            onPressed: () {
+              if (selectedStyle == styleMapDark) {
+                selectedStyle = styleMapNormal;
+              } else {
+                selectedStyle = styleMapDark;
+              }
+
+              setState(() {});
+            },
+          )
+        ],
       ),
+    );
+  }
+
+  MapboxMap crearMapa() {
+    return MapboxMap(
+      styleString: selectedStyle,
+      accessToken:
+          'pk.eyJ1IjoiYWx1Y2FyZGx1aXMiLCJhIjoiY2tsa3VvODVpMDUzYzJubno0aHJncTE1byJ9.-uiruJNS4eYIeX1Mv-XTUw',
+      onMapCreated: _onMapCreated,
+      initialCameraPosition: CameraPosition(
+        target: center,
+        zoom: 18,
+      ),
+      onStyleLoadedCallback: onStyleLoadedCallback,
     );
   }
 
