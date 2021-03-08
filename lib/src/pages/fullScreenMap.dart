@@ -1,4 +1,7 @@
+import 'dart:typed_data';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 
 class FullScreenMap extends StatefulWidget {
@@ -18,6 +21,26 @@ class _FullScreenMapState extends State<FullScreenMap> {
 
   void _onMapCreated(MapboxMapController controller) {
     mapController = controller;
+    _onStyleLoaded();
+  }
+
+  void _onStyleLoaded() {
+    addImageFromAsset("assetImage", "assets/custom-icon.png");
+    addImageFromUrl(
+        "networkImage", Uri.parse("https://via.placeholder.com/50"));
+  }
+
+  /// Adds an asset image to the currently displayed style
+  Future<void> addImageFromAsset(String name, String assetName) async {
+    final ByteData bytes = await rootBundle.load(assetName);
+    final Uint8List list = bytes.buffer.asUint8List();
+    return mapController.addImage(name, list);
+  }
+
+  /// Adds a network image to the currently displayed style
+  Future<void> addImageFromUrl(String name, Uri uri) async {
+    var response = await http.get(uri);
+    return mapController.addImage(name, response.bodyBytes);
   }
 
   @override
@@ -44,8 +67,8 @@ class _FullScreenMapState extends State<FullScreenMap> {
             mapController.addSymbol(
               SymbolOptions(
                 geometry: center,
-                iconSize: 2,
-                iconImage: 'rocket-15',
+                // iconSize: 2,
+                iconImage: 'networkImage',
                 textField: 'Mi Casa',
                 textOffset: Offset(0, 2),
               ),
@@ -76,7 +99,7 @@ class _FullScreenMapState extends State<FullScreenMap> {
             } else {
               selectedStyle = styleMapDark;
             }
-
+            _onStyleLoaded();
             setState(() {});
           },
         )
